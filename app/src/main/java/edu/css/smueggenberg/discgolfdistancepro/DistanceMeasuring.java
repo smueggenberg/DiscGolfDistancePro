@@ -2,6 +2,7 @@ package edu.css.smueggenberg.discgolfdistancepro;
 
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.widget.Button;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -11,12 +12,16 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class DistanceMeasuring extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
+    private Button btnStartStop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_distance_measuring);
         setUpMapIfNeeded();
+
+        btnStartStop = (Button) findViewById(R.id.btnStartStop);
+        btnStartStop.setText("@string/start");
     }
 
     @Override
