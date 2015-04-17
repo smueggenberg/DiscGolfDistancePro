@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">DiscGolfDistancePro</string>
+    <string name="heading">What would you like to do?</string>
+    <string name="measure">Measure my throw</string>
+    <string name="distance">View my distance records</string>
+    <string name="putting">View my putting records</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_distance_measuring">CourseMap</string>
+
+</resources>
