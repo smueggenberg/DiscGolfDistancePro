@@ -10,5 +10,6 @@
     <string name="stop">Stop measuring</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_distance_measuring">CourseMap</string>
+    <string name="title_activity_records_view">RecordsView</string>
 
 </resources>

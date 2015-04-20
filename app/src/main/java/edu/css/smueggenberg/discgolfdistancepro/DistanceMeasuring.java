@@ -1,5 +1,7 @@
 package edu.css.smueggenberg.discgolfdistancepro;
 
+import android.location.Location;
+import android.location.LocationManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.widget.Button;
@@ -13,6 +15,7 @@ public class DistanceMeasuring extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private Button btnStartStop;
+    LocationManager lcnmngr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +24,9 @@ public class DistanceMeasuring extends FragmentActivity {
         setUpMapIfNeeded();
 
         btnStartStop = (Button) findViewById(R.id.btnStartStop);
-        btnStartStop.setText("@string/start");
+        btnStartStop.setText(getString(R.string.start));
+
+        lcnmngr = (LocationManager)this.getSystemService(LOCATION_SERVICE);
     }
 
     @Override
@@ -65,6 +70,10 @@ public class DistanceMeasuring extends FragmentActivity {
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
+        // TODO: Get the users location when the map opens using a location
+        // TODO: and use the button to get the start point, then stop button to get end point and calculate and save distance
+        // Location location = lcnmngr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
         mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
     }
 }

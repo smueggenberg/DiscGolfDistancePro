@@ -39,6 +39,10 @@
             android:name=".DistanceMeasuring"
             android:label="@string/title_activity_distance_measuring" >
         </activity>
+        <activity
+            android:name=".RecordsView"
+            android:label="@string/title_activity_records_view" >
+        </activity>
     </application>
 
 </manifest>
