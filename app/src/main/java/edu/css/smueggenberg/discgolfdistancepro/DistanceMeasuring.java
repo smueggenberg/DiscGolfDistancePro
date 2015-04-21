@@ -4,18 +4,24 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class DistanceMeasuring extends FragmentActivity {
+public class DistanceMeasuring extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private Button btnStartStop;
     LocationManager lcnmngr;
+
+    boolean ready;      // Whether the device is ready to start measuring the throw (Initially true)
+                        // If true, the user has not pressed the button. If false, the device is measuring the throw
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,14 +31,46 @@ public class DistanceMeasuring extends FragmentActivity {
 
         btnStartStop = (Button) findViewById(R.id.btnStartStop);
         btnStartStop.setText(getString(R.string.start));
+        ready = true;
 
         lcnmngr = (LocationManager)this.getSystemService(LOCATION_SERVICE);
+
+        btnStartStop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(ready){
+                    Location lastLocation = lcnmngr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                    LatLng thrown = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
+                    mMap.addMarker(new MarkerOptions().position(new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude())).title("Thrown"));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(thrown, 15));
+
+                    ready = false;
+                    btnStartStop.setText(getString(R.string.stop));
+                }else{
+
+                }
+            }
+        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         setUpMapIfNeeded();
+    }
+
+    //TODO: create an on location changed event listener so the camera follows the user during the round of disc golf
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        Location lastLocation = lcnmngr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        LatLng start = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(start, 15));
     }
 
     /**
@@ -74,6 +112,6 @@ public class DistanceMeasuring extends FragmentActivity {
         // TODO: and use the button to get the start point, then stop button to get end point and calculate and save distance
         // Location location = lcnmngr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
-        mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+        //mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
     }
 }
