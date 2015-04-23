@@ -14,7 +14,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class DistanceMeasuring extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks {
+public class DistanceMeasuringActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private Button btnStartStop;

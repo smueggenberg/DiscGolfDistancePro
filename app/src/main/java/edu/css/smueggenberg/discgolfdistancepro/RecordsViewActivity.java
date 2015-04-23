@@ -6,12 +6,21 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class RecordsView extends ActionBarActivity {
+public class RecordsViewActivity extends ActionBarActivity {
+
+    boolean viewingPutts;
+    Bundle extras;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_records_view);
+
+        extras = getIntent().getExtras();
+
+        viewingPutts = extras.getBoolean("putts");
+
+        //TODO: use the boolean "viewingPutts" to determine if the activity will query putts or drives
     }
 
 
