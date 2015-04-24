@@ -2,14 +2,9 @@
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-    android:gravity="center_horizontal">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/heading"
-        android:id="@+id/lblHeading" />
+    android:gravity="center"
+    android:clickable="false"
+    android:weightSum="1">
 
     <Button
         android:layout_width="wrap_content"
@@ -28,4 +23,34 @@
         android:layout_height="wrap_content"
         android:text="@string/putting"
         android:id="@+id/btnPuttRecords" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageButton"
+        android:cropToPadding="false"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:src="@drawable/measure_my_distance_2" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageButton2" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageButton3" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:src="@drawable/measure_my_distance_2"
+        android:scaleType="fitStart"
+        android:clickable="false"
+        android:baselineAlignBottom="false"
+        android:cropToPadding="false" />
+
 </LinearLayout>
