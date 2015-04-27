@@ -27,4 +27,6 @@ public class Throw {
 
     public String getCourse() { return course; }
     public void setCourse(String course) { this.course = course; }
+
+    //TODO: to string method that formats the results of the throw
 }

@@ -4,53 +4,34 @@
         android:layout_height="fill_parent"
     android:gravity="center"
     android:clickable="false"
-    android:weightSum="1">
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/measure"
-        android:id="@+id/btnMeasure" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/distance"
-        android:id="@+id/btnDrivingRecords" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/putting"
-        android:id="@+id/btnPuttRecords" />
+    android:weightSum="1"
+    android:id="@+id/background">
 
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/imageButton"
-        android:cropToPadding="false"
+        android:id="@+id/btnMeasure"
+        android:src="@drawable/measure_my_distance"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
-        android:src="@drawable/measure_my_distance_2" />
+        android:background="@android:color/transparent" />
 
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/imageButton2" />
+        android:id="@+id/btnDrivingRecords"
+        android:src="@drawable/distance_records"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:background="@android:color/transparent" />
 
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/imageButton3" />
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/imageView"
-        android:src="@drawable/measure_my_distance_2"
-        android:scaleType="fitStart"
-        android:clickable="false"
-        android:baselineAlignBottom="false"
-        android:cropToPadding="false" />
+        android:id="@+id/btnPuttRecords"
+        android:src="@drawable/putting_records"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:background="@android:color/transparent" />
 
 </LinearLayout>
