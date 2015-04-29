@@ -28,5 +28,18 @@ public class Throw {
     public String getCourse() { return course; }
     public void setCourse(String course) { this.course = course; }
 
-    //TODO: to string method that formats the results of the throw
+    public String getThrowInfo(){
+        String result = "";
+
+        result += this.distance + " meter " + this.type;
+        if(this.course != null){
+            result += " at " + this.course;
+        }
+
+        if(this.date != null){
+            result += " on " + this.date;
+        }
+
+        return result;
+    }
 }
