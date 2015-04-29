@@ -28,7 +28,7 @@ public class Throw {
     public String getCourse() { return course; }
     public void setCourse(String course) { this.course = course; }
 
-    public String getThrowInfo(){
+    public String toString(){
         String result = "";
 
         result += this.distance + " meter " + this.type;

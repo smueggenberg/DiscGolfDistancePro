@@ -45,22 +45,28 @@ public class ThrowsDAO {
     }
 
     // TODO: make appropriate database queries to get putt list and drive list
-    public List<Throw> getThrowList(){
+    public List<Throw> getThrowList(String whereParameter){
         List<Throw> throwList = new ArrayList<Throw>();
 
         //TODO: change this query to complete above "TODO"
         //This query will get all the throws: the third parameter establishes the where clause
         //Ex "type=putt" / MySQLiteHelper.THROW_TYPE + "=" + desiredType (if desiredType is a parameter saying putt or drive)
         //Or build a string and enter the built string into the third query parameter
+
+        // Executes a query that either gets all putts or all drives depending on the parameter
+        // Then sorts the throws by course and distance
         Cursor cursor = database.query(MySQLiteHelper.TABLE_THROWS,
-                null, null, null, null, null, null);
+                null, MySQLiteHelper.THROW_TYPE + "=" + "'" + whereParameter + "'", null, null, null, "course, distance");
+
+        //MySQLiteHelper.THROW_TYPE + "=" + whereParameter
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            long distance = cursor.getLong(0);
-            String type = cursor.getString(1);
-            String course = cursor.getString(2);
-            String date = cursor.getString(3);
+            // Skips getting the ID
+            long distance = cursor.getLong(1);
+            String type = cursor.getString(2);
+            String course = cursor.getString(3);
+            String date = cursor.getString(4);
 
             Throw myThrow = new Throw(distance, type, course, date);
             throwList.add(myThrow);

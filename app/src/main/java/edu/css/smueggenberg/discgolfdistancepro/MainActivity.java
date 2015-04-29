@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
+import java.sql.SQLException;
+
 public class MainActivity extends ActionBarActivity implements View.OnClickListener {
 
     ImageButton btnMeasure;
@@ -27,6 +29,18 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         btnViewPutts = (ImageButton) findViewById(R.id.btnPuttRecords);
         background = (LinearLayout) findViewById(R.id.background);
 
+        // Create sample throws for testing: delete later
+        ThrowsDAO datasource = new ThrowsDAO(this);
+        try{
+            datasource.open();
+
+            datasource.saveThrow(230, "drive", "UMD", "4/29/2015");
+            datasource.saveThrow(90, "putt", "Bunker", "4/27/2015");
+        }catch (SQLException e){
+
+        }
+
+        //end sample code
         btnMeasure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
