@@ -13,7 +13,7 @@ import android.widget.LinearLayout;
 
 import java.sql.SQLException;
 
-public class MainActivity extends ActionBarActivity implements View.OnClickListener {
+public class MainActivity extends ActionBarActivity {
 
     ImageButton btnMeasure;
     ImageButton btnViewDrives;
@@ -72,19 +72,19 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         });
     }
 
-    @Override
-    public void onClick(View view) {
-        Log.i(MainActivity.class.getName(), "Initiating generic onClick listener");
-
-        Intent i = new Intent(getApplicationContext(), RecordsViewActivity.class);
-
-        boolean putts = view.getId() == R.id.btnPuttRecords;
-        i.putExtra("putts", putts);
-
-        Log.i(MainActivity.class.getName(), "The variable \"putts\" is" + putts);
-
-        startActivity(i);
-    }
+//    @Override
+//    public void onClick(View view) {
+//        Log.i(MainActivity.class.getName(), "Initiating generic onClick listener");
+//
+//        Intent i = new Intent(getApplicationContext(), RecordsViewActivity.class);
+//
+//        boolean putts = view.getId() == R.id.btnPuttRecords;
+//        i.putExtra("putts", putts);
+//
+//        Log.i(MainActivity.class.getName(), "The variable \"putts\" is" + putts);
+//
+//        startActivity(i);
+//    }
 
 //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {

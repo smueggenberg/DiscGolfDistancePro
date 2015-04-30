@@ -44,6 +44,11 @@ public class ThrowsDAO {
         long insertId = database.insert(MySQLiteHelper.TABLE_THROWS, null, values);
     }
 
+    public void deleteThrow(Throw selectedThrow){
+        int id = selectedThrow.getId();
+        database.delete(MySQLiteHelper.TABLE_THROWS, MySQLiteHelper.THROW_ID + "=" + id, null);
+    }
+
     // TODO: make appropriate database queries to get putt list and drive list
     public List<Throw> getThrowList(String whereParameter){
         List<Throw> throwList = new ArrayList<Throw>();
@@ -62,13 +67,13 @@ public class ThrowsDAO {
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            // Skips getting the ID
+            int id = cursor.getInt(0);
             long distance = cursor.getLong(1);
             String type = cursor.getString(2);
             String course = cursor.getString(3);
             String date = cursor.getString(4);
 
-            Throw myThrow = new Throw(distance, type, course, date);
+            Throw myThrow = new Throw(id, distance, type, course, date);
             throwList.add(myThrow);
             cursor.moveToNext();
         }

@@ -1,9 +1,12 @@
 package edu.css.smueggenberg.discgolfdistancepro;
 
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ListView;
@@ -13,7 +16,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 
-public class RecordsViewActivity extends ActionBarActivity {
+public class RecordsViewActivity extends FragmentActivity {
 
     boolean viewingPutts;
     Bundle extras;
@@ -32,12 +35,11 @@ public class RecordsViewActivity extends ActionBarActivity {
         datasource = new ThrowsDAO(this);
 
         List<Throw> throwList;
-        ArrayAdapter<Throw> adapter;
+        final ArrayAdapter<Throw> adapter;
 
         try {
             datasource.open();
 
-            //TODO: use the boolean "viewingPutts" to determine if the activity will query putts or drives
             if (viewingPutts) {
                 throwList = datasource.getThrowList("putt");
             } else {
@@ -47,17 +49,35 @@ public class RecordsViewActivity extends ActionBarActivity {
             adapter = new ArrayAdapter<Throw>(getApplicationContext(), android.R.layout.simple_list_item_1, throwList);
 
             recordsView.setAdapter(adapter);
+
+            recordsView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    Throw selectedThrow = (Throw) adapterView.getItemAtPosition(i);
+
+                    datasource.deleteThrow(selectedThrow);
+                    adapter.remove(selectedThrow);
+                }
+            });
         }catch (SQLException e){
             Toast toast = new Toast(getApplicationContext());
             toast.setText("Error connecting to database");
             toast.setDuration(Toast.LENGTH_LONG);
             toast.show();
+        }finally {
+
         }
 
-        //TODO: set the results of the query to a listview
-
-    }
-
+//        recordsView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                Throw selectedThrow = (Throw) adapterView.getItemAtPosition(i);
+//
+//                datasource.deleteThrow(selectedThrow);
+//                adapter.remove(selectedThrow);
+//            }
+//        });
+    }//end on create
 
 //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {

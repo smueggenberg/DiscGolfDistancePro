@@ -4,12 +4,21 @@ package edu.css.smueggenberg.discgolfdistancepro;
  * Created by smueggenberg on 4/22/2015.
  */
 public class Throw {
+    private int id;
     private long distance;
     private String type;
     private String course;
     private String date;
 
     public Throw(long distance, String type, String course, String date) {
+        this.distance = distance;
+        this.type = type;
+        this.course = course;
+        this.date = date;
+    }
+
+    public Throw(int id, long distance, String type, String course, String date) {
+        this.id = id;
         this.distance = distance;
         this.type = type;
         this.course = course;
@@ -27,6 +36,9 @@ public class Throw {
 
     public String getCourse() { return course; }
     public void setCourse(String course) { this.course = course; }
+
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
     public String toString(){
         String result = "";
