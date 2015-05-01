@@ -1,9 +1,13 @@
 package edu.css.smueggenberg.discgolfdistancepro;
 
+import android.content.Context;
+import android.location.GpsStatus;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -12,13 +16,16 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class DistanceMeasuringActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks {
+public class DistanceMeasuringActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks, LocationListener{
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private Button btnStartStop;
     LocationManager lcnmngr;
+
+    Marker myMarker;
 
     boolean ready;      // Whether the device is ready to start measuring the throw (Initially true)
                         // If true, the user has not pressed the button. If false, the device is measuring the throw
@@ -33,7 +40,12 @@ public class DistanceMeasuringActivity extends FragmentActivity implements Googl
         btnStartStop.setText(getString(R.string.start));
         ready = true;
 
-        lcnmngr = (LocationManager)this.getSystemService(LOCATION_SERVICE);
+        lcnmngr = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
+
+        Location lastLocation = lcnmngr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        LatLng location = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 18));
+        Log.v("Steven", "Accuracy of location: " + lastLocation.getAccuracy());
 
         btnStartStop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,16 +53,52 @@ public class DistanceMeasuringActivity extends FragmentActivity implements Googl
                 if(ready){
                     Location lastLocation = lcnmngr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                     LatLng thrown = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
-                    mMap.addMarker(new MarkerOptions().position(new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude())).title("Thrown"));
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(thrown, 15));
+                    mMap.addMarker(new MarkerOptions().position(thrown).title("Thrown"));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(thrown, 20));
+
+                    Log.v("Steven", "Accuracy of location: " + lastLocation.getAccuracy());
 
                     ready = false;
                     btnStartStop.setText(getString(R.string.stop));
                 }else{
+                    Location newLocation = lcnmngr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                    LatLng landing = new LatLng(newLocation.getLatitude(), newLocation.getLongitude());
+                    mMap.addMarker(new MarkerOptions().position(landing).title("Thrown"));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(landing, 20));
 
+
+                    Log.v("Steven", "Accuracy of location: " + newLocation.getAccuracy());
+
+                    ready = true;
+                    btnStartStop.setText(getString(R.string.start));
                 }
             }
         });
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        LatLng myLocation = new LatLng(location.getLatitude(), location.getLongitude());
+        myMarker.setPosition(myLocation);
+        myMarker.setVisible(true);
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(myLocation));
+
+        Log.v("Steven", "Accuracy of location: " + location.getAccuracy());
+    }
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String s) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
+
     }
 
     @Override
