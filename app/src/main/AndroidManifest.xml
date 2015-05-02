@@ -43,6 +43,10 @@
             android:name=".RecordsViewActivity"
             android:label="@string/title_activity_records_view" >
         </activity>
+        <activity
+            android:name=".ThrowEntryActivity"
+            android:label="@string/title_activity_throw_entry" >
+        </activity>
     </application>
 
 </manifest>

@@ -1,6 +1,7 @@
 package edu.css.smueggenberg.discgolfdistancepro;
 
 import android.content.Context;
+import android.content.Intent;
 import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationListener;
@@ -19,13 +20,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class DistanceMeasuringActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks, LocationListener{
+public class DistanceMeasuringActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks{
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private Button btnStartStop;
     LocationManager lcnmngr;
-
-    Marker myMarker;
+    float distance;
+    Location throwLocation, landingLocation;
 
     boolean ready;      // Whether the device is ready to start measuring the throw (Initially true)
                         // If true, the user has not pressed the button. If false, the device is measuring the throw
@@ -51,55 +52,63 @@ public class DistanceMeasuringActivity extends FragmentActivity implements Googl
             @Override
             public void onClick(View view) {
                 if(ready){
-                    Location lastLocation = lcnmngr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                    LatLng thrown = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
+                    throwLocation = lcnmngr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                    LatLng thrown = new LatLng(throwLocation.getLatitude(), throwLocation.getLongitude());
                     mMap.addMarker(new MarkerOptions().position(thrown).title("Thrown"));
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(thrown, 20));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(thrown, 18));
 
-                    Log.v("Steven", "Accuracy of location: " + lastLocation.getAccuracy());
+                    Log.v("Steven", "Accuracy of location: " + throwLocation.getAccuracy());
 
                     ready = false;
                     btnStartStop.setText(getString(R.string.stop));
                 }else{
-                    Location newLocation = lcnmngr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                    LatLng landing = new LatLng(newLocation.getLatitude(), newLocation.getLongitude());
+                    landingLocation = lcnmngr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                    LatLng landing = new LatLng(landingLocation.getLatitude(), landingLocation.getLongitude());
                     mMap.addMarker(new MarkerOptions().position(landing).title("Thrown"));
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(landing, 20));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(landing, 18));
 
 
-                    Log.v("Steven", "Accuracy of location: " + newLocation.getAccuracy());
+                    Log.v("Steven", "Accuracy of location: " + landingLocation.getAccuracy());
 
                     ready = true;
                     btnStartStop.setText(getString(R.string.start));
+                    mMap.clear();
+
+                    //distance = throwLocation.distanceTo(landingLocation);
+                    distance = 350f;
+
+                    Intent i = new Intent(getApplicationContext(), ThrowEntryActivity.class);
+                    i.putExtra("Distance", distance);
+                    startActivity(i);
                 }
             }
         });
     }
 
-    @Override
-    public void onLocationChanged(Location location) {
-        LatLng myLocation = new LatLng(location.getLatitude(), location.getLongitude());
-        myMarker.setPosition(myLocation);
-        myMarker.setVisible(true);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(myLocation));
-
-        Log.v("Steven", "Accuracy of location: " + location.getAccuracy());
-    }
-
-    @Override
-    public void onStatusChanged(String s, int i, Bundle bundle) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String s) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String s) {
-
-    }
+//    @Override
+//    public void onLocationChanged(Location location) {
+//        LatLng myLocation = new LatLng(location.getLatitude(), location.getLongitude());
+//        myMarker.setPosition(myLocation);
+//        myMarker.setVisible(true);
+//        mMap.moveCamera(CameraUpdateFactory.newLatLng(myLocation));
+//
+//        Log.v("Steven", "Accuracy of location: " + location.getAccuracy());
+//    }
+//
+//    @Override
+//    public void onStatusChanged(String s, int i, Bundle bundle) {
+//
+//    }
+//
+//    @Override
+//    public void onProviderEnabled(String s) {
+//
+//    }
+//
+//    @Override
+//    public void onProviderDisabled(String s) {
+//
+//    }
 
     @Override
     protected void onResume() {
