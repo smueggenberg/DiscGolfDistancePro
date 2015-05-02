@@ -30,7 +30,7 @@ public class ThrowEntryActivity extends ActionBarActivity {
         courseName = (EditText) findViewById(R.id.txtCourseName);
         throwType = (Spinner) findViewById(R.id.spnThrowType);
 
-        ArrayAdapter adapter = ArrayAdapter.createFromResource(getApplicationContext(), R.array.typesOfThrows, android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter adapter = ArrayAdapter.createFromResource(getApplicationContext(), R.array.typesOfThrows, R.layout.spinner_item);
 
         throwType.setAdapter(adapter);
 
