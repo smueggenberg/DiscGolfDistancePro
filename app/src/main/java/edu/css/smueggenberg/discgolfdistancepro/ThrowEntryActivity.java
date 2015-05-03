@@ -61,7 +61,8 @@ public class ThrowEntryActivity extends ActionBarActivity {
                     Calendar c = Calendar.getInstance();
 
                     datasource.saveThrow((long) extras.getFloat("Distance"), spnThrowType.getSelectedItem().toString(),
-                            txtCourseName.getText().toString(), Integer.toString(c.get(Calendar.DATE)));
+                            txtCourseName.getText().toString(),
+                            Integer.toString(c.get(Calendar.MONTH) + 1) + "/" + Integer.toString(c.get(Calendar.DATE)) + "/" + Integer.toString(c.get(Calendar.YEAR)));
                 }catch (SQLException e){
                     Toast.makeText(getApplicationContext(), "Error saving throw", Toast.LENGTH_SHORT).show();
                 }

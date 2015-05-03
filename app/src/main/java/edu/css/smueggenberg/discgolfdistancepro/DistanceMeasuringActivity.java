@@ -20,10 +20,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class DistanceMeasuringActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks{
+public class DistanceMeasuringActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks, LocationListener{
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private Button btnStartStop;
+    private Button btnCancel;
     LocationManager lcnmngr;
     float distance;
     Location throwLocation, landingLocation;
@@ -35,18 +36,16 @@ public class DistanceMeasuringActivity extends FragmentActivity implements Googl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_distance_measuring);
-        setUpMapIfNeeded();
-
-        btnStartStop = (Button) findViewById(R.id.btnStartStop);
-        btnStartStop.setText(getString(R.string.start));
-        ready = true;
 
         lcnmngr = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
 
-        Location lastLocation = lcnmngr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        LatLng location = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 18));
-        Log.v("Steven", "Accuracy of location: " + lastLocation.getAccuracy());
+        setUpMapIfNeeded();
+
+        btnCancel = (Button) findViewById(R.id.btnCancel);
+        btnStartStop = (Button) findViewById(R.id.btnStartStop);
+        btnStartStop.setText(getString(R.string.start));
+
+        ready = true;
 
         btnStartStop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,8 +73,8 @@ public class DistanceMeasuringActivity extends FragmentActivity implements Googl
                     btnStartStop.setText(getString(R.string.start));
                     mMap.clear();
 
-                    //distance = throwLocation.distanceTo(landingLocation);
-                    distance = 350f;
+                    distance = throwLocation.distanceTo(landingLocation);
+                    //distance = 350f;
 
                     Intent i = new Intent(getApplicationContext(), ThrowEntryActivity.class);
                     i.putExtra("Distance", distance);
@@ -83,32 +82,37 @@ public class DistanceMeasuringActivity extends FragmentActivity implements Googl
                 }
             }
         });
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 
-//    @Override
-//    public void onLocationChanged(Location location) {
-//        LatLng myLocation = new LatLng(location.getLatitude(), location.getLongitude());
-//        myMarker.setPosition(myLocation);
-//        myMarker.setVisible(true);
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(myLocation));
-//
-//        Log.v("Steven", "Accuracy of location: " + location.getAccuracy());
-//    }
-//
-//    @Override
-//    public void onStatusChanged(String s, int i, Bundle bundle) {
-//
-//    }
-//
-//    @Override
-//    public void onProviderEnabled(String s) {
-//
-//    }
-//
-//    @Override
-//    public void onProviderDisabled(String s) {
-//
-//    }
+    @Override
+    public void onLocationChanged(Location location) {
+        LatLng myLocation = new LatLng(location.getLatitude(), location.getLongitude());
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(myLocation));
+
+        Log.v("Steven", "Accuracy of location: " + location.getAccuracy());
+    }
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String s) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
+
+    }
 
     @Override
     protected void onResume() {
@@ -125,9 +129,7 @@ public class DistanceMeasuringActivity extends FragmentActivity implements Googl
 
     @Override
     public void onConnected(Bundle bundle) {
-        Location lastLocation = lcnmngr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        LatLng start = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(start, 15));
+
     }
 
     /**
@@ -165,10 +167,9 @@ public class DistanceMeasuringActivity extends FragmentActivity implements Googl
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
-        // TODO: Get the users location when the map opens using a location
-        // TODO: and use the button to get the start point, then stop button to get end point and calculate and save distance
-        // Location location = lcnmngr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
-        //mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+        Location lastLocation = lcnmngr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        LatLng start = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(start, 15));
+        Log.v("Steven", "Accuracy of location: " + lastLocation.getAccuracy());
     }
 }

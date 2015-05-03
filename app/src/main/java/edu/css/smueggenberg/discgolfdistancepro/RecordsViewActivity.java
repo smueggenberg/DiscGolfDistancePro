@@ -1,5 +1,7 @@
 package edu.css.smueggenberg.discgolfdistancepro;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -22,6 +24,7 @@ public class RecordsViewActivity extends FragmentActivity {
     Bundle extras;
     ListView recordsView;
     ThrowsDAO datasource;
+    private Throw selectedThrow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,19 +49,39 @@ public class RecordsViewActivity extends FragmentActivity {
                 throwList  = datasource.getThrowList("drive");
             }
 
-            adapter = new ArrayAdapter<Throw>(getApplicationContext(), android.R.layout.simple_list_item_1, throwList);
+            adapter = new ArrayAdapter<Throw>(getApplicationContext(), R.layout.spinner_item, throwList);
 
             recordsView.setAdapter(adapter);
 
             recordsView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    Throw selectedThrow = (Throw) adapterView.getItemAtPosition(i);
+                    selectedThrow = (Throw) adapterView.getItemAtPosition(i);
 
-                    datasource.deleteThrow(selectedThrow);
-                    adapter.remove(selectedThrow);
-                }
-            });
+                    AlertDialog.Builder adBuilder = new AlertDialog.Builder(RecordsViewActivity.this);
+
+                    adBuilder.setTitle("Delete Entry");
+                    adBuilder.setMessage("Are you sure you want to delete this entry forever?");
+
+                    adBuilder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            datasource.deleteThrow(selectedThrow);
+                            adapter.remove(selectedThrow);
+                        }
+                    });
+
+                    adBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                        }
+                    });
+
+                    AlertDialog dialog = adBuilder.create();
+                    dialog.show();
+                }// end onItemClick method
+            });// end onItemClickListener
         }catch (SQLException e){
             Toast toast = new Toast(getApplicationContext());
             toast.setText("Error connecting to database");

@@ -12,6 +12,8 @@
     <string name="stop">Stop measuring</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_throw_entry">ThrowEntryActivity</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
 
     <string-array name="typesOfThrows">
         <item>drive</item>
