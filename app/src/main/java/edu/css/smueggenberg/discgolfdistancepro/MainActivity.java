@@ -34,8 +34,8 @@ public class MainActivity extends ActionBarActivity {
         try{
             datasource.open();
 
-            datasource.saveThrow(230, "drive", "UMD", "4/29/2015");
-            datasource.saveThrow(90, "putt", "Bunker", "4/27/2015");
+            //datasource.saveThrow(230, "drive", "UMD", "4/29/2015");
+            //datasource.saveThrow(90, "putt", "Bunker", "4/27/2015");
         }catch (SQLException e){
 
         }

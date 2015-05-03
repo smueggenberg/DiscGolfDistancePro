@@ -6,18 +6,27 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.sql.SQLException;
+import java.util.Calendar;
 
 
 public class ThrowEntryActivity extends ActionBarActivity {
 
-    TextView distance;
-    EditText courseName;
-    Spinner throwType;
+    TextView txtDistance;
+    EditText txtCourseName;
+    Spinner spnThrowType;
     Bundle extras;
+
+    Button btnSave;
+    Button btnCancel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,18 +35,47 @@ public class ThrowEntryActivity extends ActionBarActivity {
 
         extras = getIntent().getExtras();
 
-        distance = (TextView) findViewById(R.id.txtDistance);
-        courseName = (EditText) findViewById(R.id.txtCourseName);
-        throwType = (Spinner) findViewById(R.id.spnThrowType);
+        btnSave = (Button) findViewById(R.id.btnSave);
+        btnCancel = (Button) findViewById(R.id.btnCancel);
+
+        txtDistance = (TextView) findViewById(R.id.txtDistance);
+        txtCourseName = (EditText) findViewById(R.id.txtCourseName);
+        spnThrowType = (Spinner) findViewById(R.id.spnThrowType);
 
         ArrayAdapter adapter = ArrayAdapter.createFromResource(getApplicationContext(), R.array.typesOfThrows, R.layout.spinner_item);
 
-        throwType.setAdapter(adapter);
+        spnThrowType.setAdapter(adapter);
 
-        distance.setTextColor(Color.YELLOW);
-        courseName.setTextColor(Color.YELLOW);
+        txtDistance.setTextColor(Color.YELLOW);
+        txtCourseName.setTextColor(Color.YELLOW);
 
-        distance.setText(Float.toString(extras.getFloat("Distance")) + " meters");
+        txtDistance.setText(Float.toString(extras.getFloat("Distance")) + " meters");
+
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ThrowsDAO datasource = new ThrowsDAO(getApplicationContext());
+                try{
+                    datasource.open();
+
+                    Calendar c = Calendar.getInstance();
+
+                    datasource.saveThrow((long) extras.getFloat("Distance"), spnThrowType.getSelectedItem().toString(),
+                            txtCourseName.getText().toString(), Integer.toString(c.get(Calendar.DATE)));
+                }catch (SQLException e){
+                    Toast.makeText(getApplicationContext(), "Error saving throw", Toast.LENGTH_SHORT).show();
+                }
+                Toast.makeText(getApplicationContext(), "Throw saved successfully", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        });
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 
 
