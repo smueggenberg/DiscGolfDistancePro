@@ -11,16 +11,26 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal">
 
-        <Button
+        <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/btnStartStop" />
+            android:id="@+id/btnStartStop"
+            android:src="@drawable/start_button"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:layout_weight="1"
+            android:background="@android:color/transparent" />
 
-        <Button
+        <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cancel"
-            android:id="@+id/btnCancel" />
+            android:id="@+id/btnCancel"
+            android:adjustViewBounds="true"
+            android:src="@drawable/cancel_button"
+            android:scaleType="fitCenter"
+            android:layout_weight="1"
+            android:background="@android:color/transparent" />
+
     </LinearLayout>
 
     <fragment android:layout_width="match_parent"

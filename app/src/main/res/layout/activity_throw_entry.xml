@@ -2,26 +2,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center_vertical">
+    android:orientation="vertical">
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
 
-        <TextView
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Distance: "
-            android:id="@+id/textView" />
+            android:id="@+id/imgDistance"
+            android:src="@drawable/distance_label"
+            android:adjustViewBounds="true"
+            android:layout_weight="1" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:id="@+id/txtDistance" />
+            android:id="@+id/txtDistance"
+            android:layout_weight="1" />
 
     </LinearLayout>
 
@@ -30,18 +31,20 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
 
-        <TextView
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Course Name"
-            android:id="@+id/textView2" />
+            android:id="@+id/imgCourseName"
+            android:src="@drawable/course_name_label"
+            android:adjustViewBounds="true"
+            android:layout_weight="1" />
 
         <EditText
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/txtCourseName"
-            android:editable="true" />
+            android:editable="true"
+            android:layout_weight="1" />
     </LinearLayout>
 
     <LinearLayout
@@ -49,18 +52,24 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <ImageView
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Throw Type"
-            android:id="@+id/textView3" />
+            android:id="@+id/imgThrowType"
+            android:src="@drawable/throw_type_label"
+            android:adjustViewBounds="true"
+            android:layout_weight="1" />
 
         <Spinner
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/spnThrowType" />
+            android:id="@+id/spnThrowType"
+            android:layout_weight="1" />
     </LinearLayout>
+
+    <Space
+        android:layout_width="fill_parent"
+        android:layout_height="100px" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -68,16 +77,24 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal">
 
-        <Button
+        <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Save"
-            android:id="@+id/btnSave" />
+            android:id="@+id/btnSave"
+            android:background="@android:color/transparent"
+            android:adjustViewBounds="true"
+            android:src="@drawable/save_button"
+            android:layout_weight="1"
+            android:scaleType="fitCenter" />
 
-        <Button
+        <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cancel"
-            android:id="@+id/btnCancel" />
+            android:id="@+id/btnCancel"
+            android:src="@drawable/cancel_button"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true" />
     </LinearLayout>
 </LinearLayout>

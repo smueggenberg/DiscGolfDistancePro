@@ -1,6 +1,7 @@
 package edu.css.smueggenberg.discgolfdistancepro;
 
 import android.content.Intent;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,7 +14,7 @@ import android.widget.LinearLayout;
 
 import java.sql.SQLException;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends FragmentActivity {
 
     ImageButton btnMeasure;
     ImageButton btnViewDrives;

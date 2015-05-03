@@ -2,6 +2,7 @@ package edu.css.smueggenberg.discgolfdistancepro;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationListener;
@@ -11,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -23,8 +25,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class DistanceMeasuringActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks, LocationListener{
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
-    private Button btnStartStop;
-    private Button btnCancel;
+    private ImageButton btnStartStop, btnCancel;
     LocationManager lcnmngr;
     float distance;
     Location throwLocation, landingLocation;
@@ -41,9 +42,9 @@ public class DistanceMeasuringActivity extends FragmentActivity implements Googl
 
         setUpMapIfNeeded();
 
-        btnCancel = (Button) findViewById(R.id.btnCancel);
-        btnStartStop = (Button) findViewById(R.id.btnStartStop);
-        btnStartStop.setText(getString(R.string.start));
+        btnCancel = (ImageButton) findViewById(R.id.btnCancel);
+        btnStartStop = (ImageButton) findViewById(R.id.btnStartStop);
+        btnStartStop.setImageDrawable(getDrawable(R.drawable.start_button));
 
         ready = true;
 
@@ -51,7 +52,12 @@ public class DistanceMeasuringActivity extends FragmentActivity implements Googl
             @Override
             public void onClick(View view) {
                 if(ready){
+
+                    if(throwLocation != null)
+                        throwLocation.reset();
+
                     throwLocation = lcnmngr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
                     LatLng thrown = new LatLng(throwLocation.getLatitude(), throwLocation.getLongitude());
                     mMap.addMarker(new MarkerOptions().position(thrown).title("Thrown"));
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(thrown, 18));
@@ -59,8 +65,12 @@ public class DistanceMeasuringActivity extends FragmentActivity implements Googl
                     Log.v("Steven", "Accuracy of location: " + throwLocation.getAccuracy());
 
                     ready = false;
-                    btnStartStop.setText(getString(R.string.stop));
+                    btnStartStop.setImageDrawable(getDrawable(R.drawable.stop_button));
                 }else{
+
+                    if(landingLocation != null)
+                        landingLocation.reset();
+
                     landingLocation = lcnmngr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                     LatLng landing = new LatLng(landingLocation.getLatitude(), landingLocation.getLongitude());
                     mMap.addMarker(new MarkerOptions().position(landing).title("Thrown"));
@@ -70,11 +80,10 @@ public class DistanceMeasuringActivity extends FragmentActivity implements Googl
                     Log.v("Steven", "Accuracy of location: " + landingLocation.getAccuracy());
 
                     ready = true;
-                    btnStartStop.setText(getString(R.string.start));
+                    btnStartStop.setImageDrawable(getDrawable(R.drawable.start_button));
                     mMap.clear();
 
                     distance = throwLocation.distanceTo(landingLocation);
-                    //distance = 350f;
 
                     Intent i = new Intent(getApplicationContext(), ThrowEntryActivity.class);
                     i.putExtra("Distance", distance);

@@ -2,6 +2,7 @@ package edu.css.smueggenberg.discgolfdistancepro;
 
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,15 +20,14 @@ import java.sql.SQLException;
 import java.util.Calendar;
 
 
-public class ThrowEntryActivity extends ActionBarActivity {
+public class ThrowEntryActivity extends FragmentActivity {
 
     TextView txtDistance;
     EditText txtCourseName;
     Spinner spnThrowType;
     Bundle extras;
 
-    Button btnSave;
-    Button btnCancel;
+    ImageButton btnSave, btnCancel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +36,8 @@ public class ThrowEntryActivity extends ActionBarActivity {
 
         extras = getIntent().getExtras();
 
-        btnSave = (Button) findViewById(R.id.btnSave);
-        btnCancel = (Button) findViewById(R.id.btnCancel);
+        btnSave = (ImageButton) findViewById(R.id.btnSave);
+        btnCancel = (ImageButton) findViewById(R.id.btnCancel);
 
         txtDistance = (TextView) findViewById(R.id.txtDistance);
         txtCourseName = (EditText) findViewById(R.id.txtCourseName);
