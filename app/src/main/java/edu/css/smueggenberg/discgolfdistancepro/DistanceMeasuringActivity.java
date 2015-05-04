@@ -5,39 +5,59 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.location.GpsStatus;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import com.google.android.gms.location.LocationListener;
 
-public class DistanceMeasuringActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks, LocationListener{
+public class DistanceMeasuringActivity extends FragmentActivity
+        implements ConnectionCallbacks,
+        LocationListener,
+        OnConnectionFailedListener{
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private ImageButton btnStartStop, btnCancel;
-    LocationManager lcnmngr;
-    float distance;
-    Location throwLocation, landingLocation;
+    private LocationManager lcnmngr;
+    private float distance;
+    private Location throwLocation, landingLocation;
 
-    boolean ready;      // Whether the device is ready to start measuring the throw (Initially true)
-                        // If true, the user has not pressed the button. If false, the device is measuring the throw
+    private static final LocationRequest REQUEST = LocationRequest.create()
+            .setInterval(10000)
+            .setFastestInterval(16)
+            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+    private GoogleApiClient mGoogleApiClient;
+
+    private boolean ready;      // Whether the device is ready to start measuring the throw (Initially true)
+                                // If true, the user has not pressed the button. If false, the device is measuring the throw
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_distance_measuring);
 
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
         lcnmngr = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
 
         setUpMapIfNeeded();
@@ -53,25 +73,33 @@ public class DistanceMeasuringActivity extends FragmentActivity implements Googl
             public void onClick(View view) {
                 if(ready){
 
-                    if(throwLocation != null)
-                        throwLocation.reset();
 
-                    throwLocation = lcnmngr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                    //throwLocation = lcnmngr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                    if(mGoogleApiClient.isConnected()) {
+                        throwLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
-                    LatLng thrown = new LatLng(throwLocation.getLatitude(), throwLocation.getLongitude());
-                    mMap.addMarker(new MarkerOptions().position(thrown).title("Thrown"));
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(thrown, 18));
+                        LatLng thrown = new LatLng(throwLocation.getLatitude(), throwLocation.getLongitude());
+//                        LatLng thrown = new LatLng(LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient).getLatitude(),
+//                                LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient).getLongitude());
 
-                    Log.v("Steven", "Accuracy of location: " + throwLocation.getAccuracy());
+                        mMap.addMarker(new MarkerOptions().position(thrown).title("Thrown"));
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(thrown, 18));
 
-                    ready = false;
-                    btnStartStop.setImageDrawable(getDrawable(R.drawable.stop_button));
+                        Log.v("Steven", "Accuracy of location: " + throwLocation.getAccuracy());
+
+                        ready = false;
+                        btnStartStop.setImageDrawable(getDrawable(R.drawable.stop_button));
+                    }else{
+                        Toast.makeText(getApplicationContext(), "Error connecting to map services", Toast.LENGTH_SHORT).show();
+                    }
                 }else{
 
-                    if(landingLocation != null)
-                        landingLocation.reset();
+//                    if(landingLocation != null)
+//                        landingLocation.reset();
 
-                    landingLocation = lcnmngr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                    //landingLocation = lcnmngr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                    landingLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
                     LatLng landing = new LatLng(landingLocation.getLatitude(), landingLocation.getLongitude());
                     mMap.addMarker(new MarkerOptions().position(landing).title("Thrown"));
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(landing, 18));
@@ -102,33 +130,39 @@ public class DistanceMeasuringActivity extends FragmentActivity implements Googl
 
     @Override
     public void onLocationChanged(Location location) {
-        LatLng myLocation = new LatLng(location.getLatitude(), location.getLongitude());
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(myLocation));
-
-        Log.v("Steven", "Accuracy of location: " + location.getAccuracy());
+//        LatLng myLocation = new LatLng(location.getLatitude(), location.getLongitude());
+//        mMap.moveCamera(CameraUpdateFactory.newLatLng(myLocation));
+//
+//        Log.v("Steven", "Accuracy of location: " + location.getAccuracy());
     }
 
-    @Override
-    public void onStatusChanged(String s, int i, Bundle bundle) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String s) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String s) {
-
-    }
+//    @Override
+//    public void onStatusChanged(String s, int i, Bundle bundle) {
+//
+//    }
+//
+//    @Override
+//    public void onProviderEnabled(String s) {
+//
+//    }
+//
+//    @Override
+//    public void onProviderDisabled(String s) {
+//
+//    }
 
     @Override
     protected void onResume() {
         super.onResume();
         setUpMapIfNeeded();
+        mGoogleApiClient.connect();
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        mGoogleApiClient.disconnect();
+    }
     //TODO: create an on location changed event listener so the camera follows the user during the round of disc golf
 
     @Override
@@ -138,7 +172,12 @@ public class DistanceMeasuringActivity extends FragmentActivity implements Googl
 
     @Override
     public void onConnected(Bundle bundle) {
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, REQUEST, this);
+    }
 
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        // Do nothing
     }
 
     /**
