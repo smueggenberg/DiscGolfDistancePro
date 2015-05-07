@@ -50,7 +50,9 @@ public class ThrowEntryActivity extends FragmentActivity {
         txtDistance.setTextColor(Color.YELLOW);
         txtCourseName.setTextColor(Color.YELLOW);
 
-        txtDistance.setText(Float.toString(extras.getFloat("Distance")) + " meters");
+
+
+        txtDistance.setText(Float.toString(extras.getFloat("Distance")) + " feet");
 
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override

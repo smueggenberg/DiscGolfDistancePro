@@ -111,7 +111,7 @@ public class DistanceMeasuringActivity extends FragmentActivity
                     btnStartStop.setImageDrawable(getDrawable(R.drawable.start_button));
                     mMap.clear();
 
-                    distance = throwLocation.distanceTo(landingLocation);
+                    distance = throwLocation.distanceTo(landingLocation) * ((100f)/(2.54f*12f));
 
                     Intent i = new Intent(getApplicationContext(), ThrowEntryActivity.class);
                     i.putExtra("Distance", distance);

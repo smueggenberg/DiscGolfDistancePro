@@ -43,7 +43,7 @@ public class Throw {
     public String toString(){
         String result = "";
 
-        result += this.distance + " meter " + this.type;
+        result += this.distance + " foot " + this.type;
         if(this.course != null){
             result += " at " + this.course;
         }
