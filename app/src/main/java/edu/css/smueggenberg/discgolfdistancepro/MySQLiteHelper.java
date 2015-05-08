@@ -7,6 +7,7 @@ import android.util.Log;
 
 /**
  * Created by smueggenberg on 4/22/2015.
+ * This class sets up the database for the app
  */
 public class MySQLiteHelper extends SQLiteOpenHelper {
     //declare constant for table name
@@ -28,6 +29,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        // Create the table for the database
         String THROW_TABLE_CREATE = "create table " + TABLE_THROWS + "(" + THROW_ID + " integer primary key autoincrement," +
                 THROW_DISTANCE + " real not null," +
                 THROW_TYPE + " text," +
@@ -39,6 +41,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        // Drops the old and creates a new database when upgrading
         Log.w(MySQLiteHelper.class.getName(),
                 "Upgrading database from version " + oldVersion + " to "
                         + newVersion + ", which will destroy all old data");

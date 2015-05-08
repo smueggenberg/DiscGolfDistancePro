@@ -14,34 +14,29 @@ import android.widget.LinearLayout;
 
 import java.sql.SQLException;
 
+/**
+ * Created by smueggenberg
+ * The main activity for the app
+ * Shows three buttons for navigating the app
+ */
 public class MainActivity extends FragmentActivity {
 
     ImageButton btnMeasure;
     ImageButton btnViewDrives;
     ImageButton btnViewPutts;
-    LinearLayout background;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Link the button widgets to variables in code
         btnMeasure = (ImageButton) findViewById(R.id.btnMeasure);
         btnViewDrives = (ImageButton) findViewById(R.id.btnDrivingRecords);
         btnViewPutts = (ImageButton) findViewById(R.id.btnPuttRecords);
-        background = (LinearLayout) findViewById(R.id.background);
 
-        // Create sample throws for testing: delete later
-        ThrowsDAO datasource = new ThrowsDAO(this);
-        try{
-            datasource.open();
-
-            //datasource.saveThrow(230, "drive", "UMD", "4/29/2015");
-            //datasource.saveThrow(90, "putt", "Bunker", "4/27/2015");
-        }catch (SQLException e){
-
-        }
-
-        //end sample code
+        // The onClick listener for "Measure my throw"
+        // Opens the distance measuring activity
         btnMeasure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -50,6 +45,8 @@ public class MainActivity extends FragmentActivity {
             }
         });
 
+        // The next two methods set the onClick listeners for viewing distance records and viewing putting records
+        // A variable is passed to the records view activity to identify which button was clicked
         btnViewPutts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -72,40 +69,4 @@ public class MainActivity extends FragmentActivity {
             }
         });
     }
-
-//    @Override
-//    public void onClick(View view) {
-//        Log.i(MainActivity.class.getName(), "Initiating generic onClick listener");
-//
-//        Intent i = new Intent(getApplicationContext(), RecordsViewActivity.class);
-//
-//        boolean putts = view.getId() == R.id.btnPuttRecords;
-//        i.putExtra("putts", putts);
-//
-//        Log.i(MainActivity.class.getName(), "The variable \"putts\" is" + putts);
-//
-//        startActivity(i);
-//    }
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_main, menu);
-//        return true;
-//    }
-
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
 }

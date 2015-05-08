@@ -27,6 +27,11 @@ import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListe
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.location.LocationListener;
 
+/**
+ * Created by smueggenberg
+ * This activity allows the user to measure the distance between two points
+ * by pressing start at the first point and stop at the second point
+ */
 public class DistanceMeasuringActivity extends FragmentActivity
         implements ConnectionCallbacks,
         LocationListener,
@@ -38,21 +43,24 @@ public class DistanceMeasuringActivity extends FragmentActivity
     private float distance;
     private Location throwLocation, landingLocation;
 
+    // The settings for the fused location listener
     private static final LocationRequest REQUEST = LocationRequest.create()
-            .setInterval(10000)
+            .setInterval(1000)
             .setFastestInterval(16)
             .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
     private GoogleApiClient mGoogleApiClient;
 
-    private boolean ready;      // Whether the device is ready to start measuring the throw (Initially true)
-                                // If true, the user has not pressed the button. If false, the device is measuring the throw
+    // Whether the device is ready to start measuring the throw (Initially true)
+    // If true, the user has not pressed the button. If false, the device is measuring the throw
+    private boolean ready;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_distance_measuring);
 
+        // Set up the fused location listener
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
                 .addConnectionCallbacks(this)
@@ -61,28 +69,31 @@ public class DistanceMeasuringActivity extends FragmentActivity
         lcnmngr = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
 
         setUpMapIfNeeded();
+        mMap.clear();
 
+        // Link the buttons to code and set the start button image
         btnCancel = (ImageButton) findViewById(R.id.btnCancel);
         btnStartStop = (ImageButton) findViewById(R.id.btnStartStop);
         btnStartStop.setImageDrawable(getDrawable(R.drawable.start_button));
 
         ready = true;
 
+        // The button used to calculate the distance of the throw
+        // Changes between start and stop with each click
         btnStartStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(ready){
-
-
-                    //throwLocation = lcnmngr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                     if(mGoogleApiClient.isConnected()) {
+                        // If not already measuring and the location listener is connected,
+                        // get the first location, which is where the user made the throw
                         throwLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
                         LatLng thrown = new LatLng(throwLocation.getLatitude(), throwLocation.getLongitude());
-//                        LatLng thrown = new LatLng(LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient).getLatitude(),
-//                                LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient).getLongitude());
 
-                        mMap.addMarker(new MarkerOptions().position(thrown).title("Thrown"));
+                        // Set the map focus to the throw location, clear existing markers, and add a marker
+                        mMap.clear();
+                        mMap.addMarker(new MarkerOptions().position(thrown).title("Throw location"));
                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(thrown, 18));
 
                         Log.v("Steven", "Accuracy of location: " + throwLocation.getAccuracy());
@@ -90,36 +101,42 @@ public class DistanceMeasuringActivity extends FragmentActivity
                         ready = false;
                         btnStartStop.setImageDrawable(getDrawable(R.drawable.stop_button));
                     }else{
+                        // Display a error message if unable to connect
                         Toast.makeText(getApplicationContext(), "Error connecting to map services", Toast.LENGTH_SHORT).show();
                     }
                 }else{
+                    // If the first location has already been set,
+                    // get the second location, which is where the throw landed
+                    if(mGoogleApiClient.isConnected()) {
+                        landingLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
-//                    if(landingLocation != null)
-//                        landingLocation.reset();
-
-                    //landingLocation = lcnmngr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                    landingLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-
-                    LatLng landing = new LatLng(landingLocation.getLatitude(), landingLocation.getLongitude());
-                    mMap.addMarker(new MarkerOptions().position(landing).title("Thrown"));
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(landing, 18));
+                        LatLng landing = new LatLng(landingLocation.getLatitude(), landingLocation.getLongitude());
+                        mMap.addMarker(new MarkerOptions().position(landing).title("Thrown"));
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(landing, 18));
 
 
-                    Log.v("Steven", "Accuracy of location: " + landingLocation.getAccuracy());
+                        Log.v("Steven", "Accuracy of location: " + landingLocation.getAccuracy());
 
-                    ready = true;
-                    btnStartStop.setImageDrawable(getDrawable(R.drawable.start_button));
-                    mMap.clear();
+                        ready = true;
+                        btnStartStop.setImageDrawable(getDrawable(R.drawable.start_button));
 
-                    distance = throwLocation.distanceTo(landingLocation) * ((100f)/(2.54f*12f));
+                        // Get the distance between the start and stop points
+                        // and convert the units from meters to feet
+                        distance = throwLocation.distanceTo(landingLocation) * ((100f) / (2.54f * 12f));
 
-                    Intent i = new Intent(getApplicationContext(), ThrowEntryActivity.class);
-                    i.putExtra("Distance", distance);
-                    startActivity(i);
+                        // Move the information about the throw to the next activity for review
+                        Intent i = new Intent(getApplicationContext(), ThrowEntryActivity.class);
+                        i.putExtra("Distance", distance);
+                        startActivity(i);
+                    }else{
+                        // Display a error message if unable to connect
+                        Toast.makeText(getApplicationContext(), "Error connecting to map services", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
 
+        // Exit the activity
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -130,26 +147,13 @@ public class DistanceMeasuringActivity extends FragmentActivity
 
     @Override
     public void onLocationChanged(Location location) {
-//        LatLng myLocation = new LatLng(location.getLatitude(), location.getLongitude());
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(myLocation));
-//
-//        Log.v("Steven", "Accuracy of location: " + location.getAccuracy());
+        // Follow the user as he/she walks with the device
+        if (mGoogleApiClient.isConnected()){
+            LatLng myLocation = new LatLng(location.getLatitude(), location.getLongitude());
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(myLocation));
+        }
+        Log.v("Steven", "Accuracy of location: " + location.getAccuracy());
     }
-
-//    @Override
-//    public void onStatusChanged(String s, int i, Bundle bundle) {
-//
-//    }
-//
-//    @Override
-//    public void onProviderEnabled(String s) {
-//
-//    }
-//
-//    @Override
-//    public void onProviderDisabled(String s) {
-//
-//    }
 
     @Override
     protected void onResume() {
@@ -163,11 +167,10 @@ public class DistanceMeasuringActivity extends FragmentActivity
         super.onPause();
         mGoogleApiClient.disconnect();
     }
-    //TODO: create an on location changed event listener so the camera follows the user during the round of disc golf
 
     @Override
     public void onConnectionSuspended(int i) {
-
+        // Do nothing
     }
 
     @Override
@@ -209,12 +212,12 @@ public class DistanceMeasuringActivity extends FragmentActivity
     }
 
     /**
-     * This is where we can add markers or lines, add listeners or move the camera. In this case, we
-     * just add a marker near Africa.
+     * This is where we can add markers or lines, add listeners or move the camera.
      * <p/>
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
+        // Sets up the map near where the user is located
         Location lastLocation = lcnmngr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         LatLng start = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(start, 15));

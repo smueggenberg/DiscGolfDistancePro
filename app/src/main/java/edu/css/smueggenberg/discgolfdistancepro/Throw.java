@@ -2,6 +2,9 @@ package edu.css.smueggenberg.discgolfdistancepro;
 
 /**
  * Created by smueggenberg on 4/22/2015.
+ * The object representing the items saved in the app's database
+ * Stores a throws id in the database, distance, type: putt or drive,
+ * course where it was thrown, and the date thrown
  */
 public class Throw {
     private int id;
@@ -40,6 +43,7 @@ public class Throw {
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
+    // Returns a string representation of the throw's data
     public String toString(){
         String result = "";
 

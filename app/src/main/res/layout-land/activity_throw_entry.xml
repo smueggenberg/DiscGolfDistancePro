@@ -67,7 +67,8 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/spnThrowType"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:popupBackground="#ff009db3" />
     </LinearLayout>
 
     <LinearLayout

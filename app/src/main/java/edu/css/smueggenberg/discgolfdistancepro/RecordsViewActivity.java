@@ -17,7 +17,11 @@ import android.widget.Toast;
 import java.sql.SQLException;
 import java.util.List;
 
-
+/**
+ * Created by smueggenberg
+ * Code for activity where the user can view throws saved to the database.
+ * The user can be viewing putts or drives
+ */
 public class RecordsViewActivity extends FragmentActivity {
 
     boolean viewingPutts;
@@ -43,6 +47,7 @@ public class RecordsViewActivity extends FragmentActivity {
         try {
             datasource.open();
 
+            // Get the list of throws depending on whether view putts or view drives was selected
             if (viewingPutts) {
                 throwList = datasource.getThrowList("putt");
             } else {
@@ -50,9 +55,10 @@ public class RecordsViewActivity extends FragmentActivity {
             }
 
             adapter = new ArrayAdapter<Throw>(getApplicationContext(), R.layout.spinner_item, throwList);
-
             recordsView.setAdapter(adapter);
 
+            // Sets the on click listener for list items
+            // When a list item is clicked, the user can choose to delete the entry or cancel
             recordsView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -63,6 +69,7 @@ public class RecordsViewActivity extends FragmentActivity {
                     adBuilder.setTitle("Delete Entry");
                     adBuilder.setMessage("Are you sure you want to delete this entry forever?");
 
+                    // Set up the popup dialogue box
                     adBuilder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
@@ -70,7 +77,6 @@ public class RecordsViewActivity extends FragmentActivity {
                             adapter.remove(selectedThrow);
                         }
                     });
-
                     adBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
@@ -83,44 +89,11 @@ public class RecordsViewActivity extends FragmentActivity {
                 }// end onItemClick method
             });// end onItemClickListener
         }catch (SQLException e){
+            // If unable to connect to database, display a toast error message
             Toast toast = new Toast(getApplicationContext());
             toast.setText("Error connecting to database");
             toast.setDuration(Toast.LENGTH_LONG);
             toast.show();
-        }finally {
-
         }
-
-//        recordsView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                Throw selectedThrow = (Throw) adapterView.getItemAtPosition(i);
-//
-//                datasource.deleteThrow(selectedThrow);
-//                adapter.remove(selectedThrow);
-//            }
-//        });
     }//end on create
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_records_view, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
 }
